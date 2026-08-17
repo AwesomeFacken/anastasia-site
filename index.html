@@ -74,13 +74,21 @@
   .programs-list .reveal:nth-child(2){ transition-delay:.12s; }
   .programs-list .reveal:nth-child(3){ transition-delay:.19s; }
   .programs-list .reveal:nth-child(4){ transition-delay:.26s; }
-  .reviews-track .reveal:nth-child(1){ transition-delay:.05s; }
-  .reviews-track .reveal:nth-child(2){ transition-delay:.1s; }
-  .reviews-track .reveal:nth-child(3){ transition-delay:.15s; }
-  .reviews-track .reveal:nth-child(4){ transition-delay:.2s; }
-  .reviews-track .reveal:nth-child(5){ transition-delay:.25s; }
-  .reviews-track .reveal:nth-child(6){ transition-delay:.3s; }
-  .reviews-track .reveal:nth-child(7){ transition-delay:.35s; }
+  .reviews-track .reveal:nth-child(1){ transition-delay:.03s; }
+  .reviews-track .reveal:nth-child(2){ transition-delay:.06s; }
+  .reviews-track .reveal:nth-child(3){ transition-delay:.09s; }
+  .reviews-track .reveal:nth-child(4){ transition-delay:.12s; }
+  .reviews-track .reveal:nth-child(5){ transition-delay:.15s; }
+  .reviews-track .reveal:nth-child(6){ transition-delay:.18s; }
+  .reviews-track .reveal:nth-child(7){ transition-delay:.21s; }
+  .reviews-track .reveal:nth-child(8){ transition-delay:.24s; }
+  .reviews-track .reveal:nth-child(9){ transition-delay:.27s; }
+  .reviews-track .reveal:nth-child(10){ transition-delay:.3s; }
+  .reviews-track .reveal:nth-child(11){ transition-delay:.33s; }
+  .reviews-track .reveal:nth-child(12){ transition-delay:.36s; }
+  .reviews-track .reveal:nth-child(13){ transition-delay:.39s; }
+  .reviews-track .reveal:nth-child(14){ transition-delay:.42s; }
+  .reviews-track .reveal:nth-child(15){ transition-delay:.45s; }
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
     padding:15px 30px; border-radius:2px; font-weight:700; font-size:14.5px;
@@ -129,15 +137,32 @@
   .stat b{ font-family:var(--serif); font-size:30px; color:var(--gold); display:block; }
   .stat span{ font-size:13px; color:var(--text-muted); }
 
+  /* Hero entrance animation — staggered fade + slide up on load */
+  .hero-anim{ opacity:0; transform:translateY(28px); animation:heroUp .9s cubic-bezier(.19,1,.22,1) forwards; }
+  .hero .eyebrow.hero-anim{ animation-delay:.05s; }
+  .hero h1.hero-anim{ animation-delay:.18s; }
+  .hero p.lead.hero-anim{ animation-delay:.34s; }
+  .hero-ctas.hero-anim{ animation-delay:.48s; }
+  .hero-stats.hero-anim{ animation-delay:.6s; }
+  .chart-wrap.hero-anim{ opacity:0; transform:translateY(0) scale(.92); animation:heroScaleIn 1.1s cubic-bezier(.19,1,.22,1) forwards; animation-delay:.3s; }
+  @keyframes heroUp{ to{ opacity:1; transform:translateY(0); } }
+  @keyframes heroScaleIn{ to{ opacity:1; transform:scale(1); } }
+
   .chart-wrap{ position:relative; display:flex; align-items:center; justify-content:center; }
   .chart-wrap svg{ width:100%; max-width:460px; height:auto; }
   .chart-ring{ fill:none; stroke:var(--border); }
   .chart-line{ fill:none; stroke:var(--cobalt-soft); stroke-width:1; opacity:.55; stroke-dasharray:600; stroke-dashoffset:600; animation:draw 2.4s ease forwards; }
   .chart-line.gold{ stroke:var(--gold); opacity:.7; }
-  .chart-dot{ fill:var(--gold); opacity:0; animation:fadein .6s ease forwards; }
+  .chart-dot{ fill:var(--gold); opacity:0; animation:fadein .6s ease forwards, floatDot 3.6s ease-in-out infinite; animation-delay:var(--fd,0s), calc(var(--fd,0s) + .6s); transform-box:fill-box; transform-origin:center; }
   .chart-label{ font-family:var(--sans); font-size:10px; fill:var(--text-muted); letter-spacing:.08em; }
   @keyframes draw{ to{ stroke-dashoffset:0; } }
   @keyframes fadein{ to{ opacity:1; } }
+  @keyframes floatDot{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce){
+    .hero-anim, .chart-dot, .reveal{ animation:none !important; transition:none !important; opacity:1 !important; transform:none !important; }
+  }
 
   /* ABOUT */
   .about-grid{ display:grid; grid-template-columns:.85fr 1.15fr; gap:70px; align-items:center; }
@@ -184,6 +209,7 @@
   .prog-price{ font-size:16px; text-align:right; font-weight:700; }
 
   /* REVIEWS */
+  :root{ --sage:#7C9473; --sage-dim:#5E7355; }
   .reviews-carousel-wrap{ position:relative; }
   .reviews-track{
     display:flex; gap:22px; overflow-x:auto; scroll-snap-type:x mandatory;
@@ -191,9 +217,79 @@
   }
   .reviews-track::-webkit-scrollbar{ display:none; }
   .review-card{
-    flex:0 0 320px; scroll-snap-align:start;
-    background:var(--bg); border:1px solid var(--border); padding:30px 26px; border-radius:2px; position:relative;
+    flex:0 0 300px; scroll-snap-align:start;
+    background:var(--bg); border:1px solid var(--border); border-radius:14px; position:relative;
+    overflow:hidden; transition:transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s ease;
   }
+  .review-card:hover{ transform:translateY(-4px); box-shadow:0 16px 32px -14px rgba(62,51,35,.22); }
+  .review-head{ display:flex; align-items:center; gap:12px; padding:20px 22px 14px; }
+  .review-avatar{
+    width:42px; height:42px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-size:16px; font-weight:600; color:#fff;
+    background:linear-gradient(150deg, var(--cobalt), var(--cobalt-soft));
+  }
+  .review-headtext{ flex-grow:1; min-width:0; }
+  .review-name{ font-size:14px; font-weight:700; color:var(--text); }
+  .review-role{ font-size:12px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .review-platform{
+    display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700;
+    padding:4px 9px; border-radius:20px; flex-shrink:0; letter-spacing:.02em;
+  }
+  .review-platform svg{ width:12px; height:12px; }
+  .review-platform.tg{ background:rgba(52,80,255,.1); color:var(--cobalt); }
+  .review-platform.wa{ background:rgba(124,148,115,.14); color:var(--sage-dim); }
+  .review-bubble{
+    margin:0 22px 16px; padding:14px 16px; border-radius:4px 14px 14px 14px;
+    background:var(--bg-alt); font-size:14px; line-height:1.55; color:var(--text);
+    position:relative;
+  }
+  .review-platform.wa ~ .review-bubble, .review-card:has(.review-platform.wa) .review-bubble{ background:rgba(124,148,115,.08); }
+  .review-foot{ display:flex; align-items:center; justify-content:space-between; padding:0 22px 20px; }
+  .review-time{ font-size:11.5px; color:var(--text-muted); }
+  .review-reaction{
+    display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text-muted);
+    background:var(--bg-alt); padding:4px 10px; border-radius:20px;
+  }
+  .review-reaction svg{ width:12px; height:12px; fill:#D96E6E; stroke:none; }
+  .review-original{
+    display:flex; align-items:center; gap:6px; margin:0 22px 20px; padding-top:14px;
+    border-top:1px solid var(--border); font-size:12.5px; font-weight:700; color:var(--cobalt);
+    background:none; border-left:none; border-right:none; border-bottom:none; cursor:pointer;
+    width:calc(100% - 44px); text-align:left; transition:gap .25s ease, color .25s ease;
+  }
+  .review-original svg{ width:13px; height:13px; transition:transform .25s cubic-bezier(.4,0,.2,1); }
+  .review-original:hover{ color:var(--gold); gap:10px; }
+  .review-original:hover svg{ transform:translateX(3px); }
+
+  /* REVIEW LIGHTBOX MODAL */
+  .lightbox{
+    position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center;
+    padding:24px; background:rgba(30,24,16,.55); backdrop-filter:blur(4px);
+    opacity:0; transition:opacity .3s ease;
+  }
+  .lightbox.open{ display:flex; opacity:1; }
+  .lightbox-card{
+    background:var(--bg); border-radius:16px; max-width:420px; width:100%; overflow:hidden;
+    transform:translateY(24px) scale(.97); transition:transform .35s cubic-bezier(.19,1,.22,1);
+    box-shadow:0 30px 60px -20px rgba(30,24,16,.4);
+  }
+  .lightbox.open .lightbox-card{ transform:translateY(0) scale(1); }
+  .lightbox-head{ display:flex; align-items:center; gap:12px; padding:20px 22px; border-bottom:1px solid var(--border); }
+  .lightbox-close{
+    margin-left:auto; width:32px; height:32px; border-radius:50%; border:1px solid var(--border);
+    background:none; color:var(--text-muted); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .25s ease;
+  }
+  .lightbox-close:hover{ background:var(--cobalt); border-color:var(--cobalt); color:#fff; transform:rotate(90deg); }
+  .lightbox-body{ padding:26px 22px; }
+  .lightbox-placeholder{
+    aspect-ratio:9/16; max-height:60vh; margin:0 auto; border-radius:12px; border:1.5px dashed var(--border);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    color:var(--text-muted); font-size:13px; text-align:center; padding:24px;
+    background:linear-gradient(160deg, var(--bg-alt2), var(--bg-alt));
+  }
+  .lightbox-placeholder svg{ width:34px; height:34px; opacity:.5; }
   .reviews-nav{ display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
   .reviews-nav button{
     width:46px; height:46px; border-radius:50%; border:1px solid var(--border);
@@ -203,10 +299,6 @@
   .reviews-nav button:hover{ background:var(--cobalt); border-color:var(--cobalt); color:#fff; transform:translateY(-3px); box-shadow:0 8px 20px -6px rgba(139,122,163,.5); }
   .reviews-nav button:active{ transform:translateY(-1px) scale(.94); }
   .reviews-nav button svg{ width:18px; height:18px; }
-  .review-card::before{ content:"“"; font-family:var(--serif); font-size:52px; color:var(--gold); opacity:.4; line-height:1; display:block; margin-bottom:6px; }
-  .review-card p{ color:var(--text-muted); font-size:14.5px; margin-bottom:20px; }
-  .review-name{ font-size:14px; font-weight:700; color:var(--text); }
-  .review-role{ font-size:12.5px; color:var(--gold); }
 
   /* CONTACT */
   .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:70px; }
@@ -276,19 +368,19 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow">Астропсихолог · Хорарный астролог · МАК · Таро</div>
-      <h1>Читаю карту <em>рождения</em>,<br>карты на столе<br>и то, что между строк</h1>
-      <p class="lead">Соединяю астрологию, метафорические карты и таро с психологическим подходом — чтобы вы не просто услышали прогноз, а поняли себя и увидели путь.</p>
-      <div class="hero-ctas">
+      <div class="eyebrow hero-anim">Астропсихолог · Хорарный астролог · МАК · Таро</div>
+      <h1 class="hero-anim">Читаю карту <em>рождения</em>,<br>карты на столе<br>и то, что между строк</h1>
+      <p class="lead hero-anim">Соединяю астрологию, метафорические карты и таро с психологическим подходом — чтобы вы не просто услышали прогноз, а поняли себя и увидели путь.</p>
+      <div class="hero-ctas hero-anim">
         <a href="#services" class="btn btn-primary">Выбрать консультацию</a>
         <a href="#about" class="btn btn-ghost">Обо мне</a>
       </div>
-      <div class="hero-stats">
+      <div class="hero-stats hero-anim">
         <div class="stat"><b>7+</b><span>лет практики</span></div>
         <div class="stat"><b>900+</b><span>консультаций</span></div>
       </div>
     </div>
-    <div class="chart-wrap">
+    <div class="chart-wrap hero-anim">
       <svg viewBox="0 0 400 400">
         <circle class="chart-ring" cx="200" cy="200" r="170"/>
         <circle class="chart-ring" cx="200" cy="200" r="120"/>
@@ -297,11 +389,11 @@
         <path class="chart-line gold" d="M200,80 L306,320 L94,320 Z" style="animation-delay:.3s"/>
         <path class="chart-line" d="M200,30 L200,370 M62,286 L338,286" style="animation-delay:.6s"/>
         <g>
-          <circle class="chart-dot" cx="200" cy="30" r="4" style="animation-delay:1s"/>
-          <circle class="chart-dot" cx="338" cy="286" r="4" style="animation-delay:1.2s"/>
-          <circle class="chart-dot" cx="62" cy="286" r="4" style="animation-delay:1.4s"/>
-          <circle class="chart-dot" cx="306" cy="320" r="3" style="animation-delay:1.6s"/>
-          <circle class="chart-dot" cx="94" cy="320" r="3" style="animation-delay:1.8s"/>
+          <circle class="chart-dot" cx="200" cy="30" r="4" style="--fd:1s"/>
+          <circle class="chart-dot" cx="338" cy="286" r="4" style="--fd:1.2s"/>
+          <circle class="chart-dot" cx="62" cy="286" r="4" style="--fd:1.4s"/>
+          <circle class="chart-dot" cx="306" cy="320" r="3" style="--fd:1.6s"/>
+          <circle class="chart-dot" cx="94" cy="320" r="3" style="--fd:1.8s"/>
         </g>
         <text class="chart-label" x="200" y="20" text-anchor="middle">ASC</text>
         <text class="chart-label" x="356" y="290" text-anchor="start">МАК</text>
@@ -450,39 +542,244 @@
     <div class="reviews-carousel-wrap">
       <div class="reviews-track" id="reviewsTrack">
         <div class="review-card reveal">
-          <p>После разбора карты наконец поняла, почему определённые сферы жизни давались тяжело. Всё разложено чётко, без воды, с конкретными рекомендациями.</p>
-          <div class="review-name">Мария</div>
-          <div class="review-role">Разбор натальной карты</div>
+          <div class="review-head">
+            <div class="review-avatar">М</div>
+            <div class="review-headtext">
+              <div class="review-name">Мария</div>
+              <div class="review-role">Разбор натальной карты</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">После разбора карты наконец поняла, почему определённые сферы жизни давались тяжело. Всё разложено чётко, без воды, с конкретными рекомендациями.</div>
+          <div class="review-foot">
+            <span class="review-time">вчера, 21:14</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>12</span>
+          </div>
+          <button type="button" class="review-original" data-name="Мария" data-role="Разбор натальной карты" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
         <div class="review-card reveal">
-          <p>Сессия с МАК вскрыла то, что я месяцами не могла сформулировать словами. За час дошли до сути гораздо быстрее, чем с обычным разговором.</p>
-          <div class="review-name">Ольга</div>
-          <div class="review-role">Сессия с МАК</div>
+          <div class="review-head">
+            <div class="review-avatar">О</div>
+            <div class="review-headtext">
+              <div class="review-name">Ольга</div>
+              <div class="review-role">Сессия с МАК</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Сессия с МАК вскрыла то, что я месяцами не могла сформулировать словами. За час дошли до сути гораздо быстрее, чем с обычным разговором.</div>
+          <div class="review-foot">
+            <span class="review-time">вчера, 18:47</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>9</span>
+          </div>
+          <button type="button" class="review-original" data-name="Ольга" data-role="Сессия с МАК" data-platform="wa">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
         <div class="review-card reveal">
-          <p>Прошла курс по таро с нуля — очень структурно, без эзотерического тумана. Теперь уверенно консультирую сама.</p>
-          <div class="review-name">Виктория</div>
-          <div class="review-role">Курс «Таро: от базы до практики»</div>
+          <div class="review-head">
+            <div class="review-avatar">В</div>
+            <div class="review-headtext">
+              <div class="review-name">Виктория</div>
+              <div class="review-role">Курс «Таро: от базы до практики»</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Прошла курс по таро с нуля — очень структурно, без эзотерического тумана. Теперь уверенно консультирую сама.</div>
+          <div class="review-foot">
+            <span class="review-time">2 дня назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>21</span>
+          </div>
+          <button type="button" class="review-original" data-name="Виктория" data-role="Курс «Таро: от базы до практики»" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
         <div class="review-card reveal">
-          <p>Хорарный вопрос закрыл ситуацию, которая тянулась месяцами. Точный ответ без размытых формулировок — именно то, что было нужно для решения.</p>
-          <div class="review-name">Дмитрий</div>
-          <div class="review-role">Хорарная астрология</div>
+          <div class="review-head">
+            <div class="review-avatar">Д</div>
+            <div class="review-headtext">
+              <div class="review-name">Дмитрий</div>
+              <div class="review-role">Хорарная астрология</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Хорарный вопрос закрыл ситуацию, которая тянулась месяцами. Точный ответ без размытых формулировок — именно то, что было нужно.</div>
+          <div class="review-foot">
+            <span class="review-time">3 дня назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>7</span>
+          </div>
+          <button type="button" class="review-original" data-name="Дмитрий" data-role="Хорарная астрология" data-platform="wa">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
         <div class="review-card reveal">
-          <p>Расклад таро помог посмотреть на отношения со стороны и перестать додумывать за партнёра. После разговора стало гораздо легче.</p>
-          <div class="review-name">Алина</div>
-          <div class="review-role">Расклад на вопрос</div>
+          <div class="review-head">
+            <div class="review-avatar">А</div>
+            <div class="review-headtext">
+              <div class="review-name">Алина</div>
+              <div class="review-role">Расклад на вопрос</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Расклад таро помог посмотреть на отношения со стороны и перестать додумывать за партнёра. После разговора стало гораздо легче.</div>
+          <div class="review-foot">
+            <span class="review-time">3 дня назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>15</span>
+          </div>
+          <button type="button" class="review-original" data-name="Алина" data-role="Расклад на вопрос" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
         <div class="review-card reveal">
-          <p>Разбор соляра совпал с реальными событиями года почти дословно. Теперь готовлюсь к следующему году заранее и без тревоги.</p>
-          <div class="review-name">Екатерина</div>
-          <div class="review-role">Соляр — разбор года</div>
+          <div class="review-head">
+            <div class="review-avatar">Е</div>
+            <div class="review-headtext">
+              <div class="review-name">Екатерина</div>
+              <div class="review-role">Соляр — разбор года</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Разбор соляра совпал с реальными событиями года почти дословно. Теперь готовлюсь к следующему году заранее и без тревоги.</div>
+          <div class="review-foot">
+            <span class="review-time">4 дня назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>18</span>
+          </div>
+          <button type="button" class="review-original" data-name="Екатерина" data-role="Соляр — разбор года" data-platform="wa">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
         <div class="review-card reveal">
-          <p>Синастрия показала не только точки притяжения, но и конкретные зоны, над которыми стоит работать вместе. Обсудили карту вдвоём с партнёром — очень откликнулось.</p>
-          <div class="review-name">Мария и Игорь</div>
-          <div class="review-role">Синастрия для двоих</div>
+          <div class="review-head">
+            <div class="review-avatar">МИ</div>
+            <div class="review-headtext">
+              <div class="review-name">Мария и Игорь</div>
+              <div class="review-role">Синастрия для двоих</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Синастрия показала не только точки притяжения, но и зоны, над которыми стоит работать вместе. Обсудили карту вдвоём — очень откликнулось.</div>
+          <div class="review-foot">
+            <span class="review-time">5 дней назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>11</span>
+          </div>
+          <button type="button" class="review-original" data-name="Мария и Игорь" data-role="Синастрия для двоих" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">Н</div>
+            <div class="review-headtext">
+              <div class="review-name">Наталья</div>
+              <div class="review-role">Полный разбор личности</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Впервые увидела свою карту так подробно и без общих фраз. Многое встало на свои места — особенно про финансовый блок.</div>
+          <div class="review-foot">
+            <span class="review-time">неделю назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>14</span>
+          </div>
+          <button type="button" class="review-original" data-name="Наталья" data-role="Полный разбор личности" data-platform="wa">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">С</div>
+            <div class="review-headtext">
+              <div class="review-name">Сергей</div>
+              <div class="review-role">Гайд «Путь к себе»</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Прошёл разбор карты сам по гайду — удивительно доступно объяснено для человека без бэкграунда в астрологии.</div>
+          <div class="review-foot">
+            <span class="review-time">неделю назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>8</span>
+          </div>
+          <button type="button" class="review-original" data-name="Сергей" data-role="Гайд «Путь к себе»" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">Ю</div>
+            <div class="review-headtext">
+              <div class="review-name">Юлия</div>
+              <div class="review-role">Сессия с МАК</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">После сессии с картами наконец поняла, что именно меня останавливает в карьере. Очень бережный и точный подход.</div>
+          <div class="review-foot">
+            <span class="review-time">неделю назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>16</span>
+          </div>
+          <button type="button" class="review-original" data-name="Юлия" data-role="Сессия с МАК" data-platform="wa">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">А</div>
+            <div class="review-headtext">
+              <div class="review-name">Анна</div>
+              <div class="review-role">Расклад на вопрос</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Спросила про переезд — расклад дал неожиданный ракурс, о котором я даже не думала. Решение принять стало проще.</div>
+          <div class="review-foot">
+            <span class="review-time">2 недели назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>10</span>
+          </div>
+          <button type="button" class="review-original" data-name="Анна" data-role="Расклад на вопрос" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">П</div>
+            <div class="review-headtext">
+              <div class="review-name">Павел</div>
+              <div class="review-role">Хорарная астрология</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Задал вопрос про сделку — ответ оказался точным день в день. Теперь всегда обращаюсь именно так, когда нужно решение быстро.</div>
+          <div class="review-foot">
+            <span class="review-time">2 недели назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>13</span>
+          </div>
+          <button type="button" class="review-original" data-name="Павел" data-role="Хорарная астрология" data-platform="wa">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">И</div>
+            <div class="review-headtext">
+              <div class="review-name">Ирина</div>
+              <div class="review-role">Курс «Астрология с нуля»</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Начинала с полного нуля, сейчас уже делаю разборы для друзей. Программа выстроена очень логично, шаг за шагом.</div>
+          <div class="review-foot">
+            <span class="review-time">2 недели назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>24</span>
+          </div>
+          <button type="button" class="review-original" data-name="Ирина" data-role="Курс «Астрология с нуля»" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">К</div>
+            <div class="review-headtext">
+              <div class="review-name">Ксения</div>
+              <div class="review-role">Синастрия для двоих</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Разбор совместимости помог перестать искать виноватого в конфликтах — увидели структуру отношений целиком.</div>
+          <div class="review-foot">
+            <span class="review-time">3 недели назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>9</span>
+          </div>
+          <button type="button" class="review-original" data-name="Ксения" data-role="Синастрия для двоих" data-platform="wa">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal">
+          <div class="review-head">
+            <div class="review-avatar">В</div>
+            <div class="review-headtext">
+              <div class="review-name">Владимир</div>
+              <div class="review-role">Соляр — разбор года</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Второй год подряд заказываю разбор соляра — по факту каждый раз попадание в ключевые события. Уже не представляю год без этого.</div>
+          <div class="review-foot">
+            <span class="review-time">3 недели назад</span>
+            <span class="review-reaction"><svg viewBox="0 0 24 24"><path d="M12 21s-6.7-4.35-9.3-8.1C1.02 10.6 1.6 7.3 4.3 5.9c2.2-1.15 4.6-.4 5.9 1.3.4.5.8 1.1 1.8 2.4 1-.13 1.4-1.9 1.8-2.4 1.3-1.7 3.7-2.45 5.9-1.3 2.7 1.4 3.28 4.7 1.6 7-2.6 3.75-9.3 8.1-9.3 8.1z"/></svg>19</span>
+          </div>
+          <button type="button" class="review-original" data-name="Владимир" data-role="Соляр — разбор года" data-platform="tg">Посмотреть оригинал отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
       </div>
       <div class="reviews-nav">
@@ -548,6 +845,27 @@
   </div>
 </footer>
 
+<div class="lightbox" id="reviewLightbox">
+  <div class="lightbox-card">
+    <div class="lightbox-head">
+      <div class="review-avatar" id="lightboxAvatar">А</div>
+      <div class="review-headtext">
+        <div class="review-name" id="lightboxName">Имя</div>
+        <div class="review-role" id="lightboxRole">Услуга</div>
+      </div>
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="lightbox-body">
+      <div class="lightbox-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span id="lightboxPlatformText">Скриншот переписки появится здесь</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   // Mobile menu toggle
   const burger = document.getElementById('burger');
@@ -596,6 +914,39 @@
       reviewsTrack.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
     });
   }
+
+  // Review original-screenshot lightbox
+  // NOTE: currently shows a placeholder — once you have real Telegram/WhatsApp
+  // screenshots, add an <img src="images/reviews/xxx.jpg"> inside .lightbox-body
+  // instead of .lightbox-placeholder, per review (e.g. via a data-img attribute).
+  const lightbox = document.getElementById('reviewLightbox');
+  const lightboxAvatar = document.getElementById('lightboxAvatar');
+  const lightboxName = document.getElementById('lightboxName');
+  const lightboxRole = document.getElementById('lightboxRole');
+  const lightboxPlatformText = document.getElementById('lightboxPlatformText');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  function openLightbox(btn){
+    const name = btn.dataset.name || '';
+    const role = btn.dataset.role || '';
+    const platform = btn.dataset.platform === 'wa' ? 'WhatsApp' : 'Telegram';
+    lightboxName.textContent = name;
+    lightboxRole.textContent = role;
+    lightboxAvatar.textContent = name.trim().charAt(0).toUpperCase();
+    lightboxPlatformText.textContent = `Скриншот переписки из ${platform} появится здесь`;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.review-original').forEach(btn => {
+    btn.addEventListener('click', () => openLightbox(btn));
+  });
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 </script>
 
 </body>
