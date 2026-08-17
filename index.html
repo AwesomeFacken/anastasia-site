@@ -59,7 +59,7 @@
   .section-sub{color:var(--text-muted); max-width:560px; font-size:16px; margin-bottom:52px;}
   section{position:relative; z-index:1; padding:110px 0;}
 
-  /* ===== УСИЛЕННАЯ АНИМАЦИЯ ПРИ СКРОЛЛЕ ===== */
+  /* ===== АНИМАЦИЯ ПРИ СКРОЛЛЕ ===== */
   .reveal {
     opacity:0;
     transition: opacity 0.9s cubic-bezier(.2,.9,.3,1), transform 0.9s cubic-bezier(.2,.9,.3,1);
@@ -72,7 +72,6 @@
     opacity:1;
     transform:translate(0) scale(1);
   }
-  /* Задержки для каскадного появления */
   .reveal:nth-child(1){ transition-delay:0s; }
   .reveal:nth-child(2){ transition-delay:0.07s; }
   .reveal:nth-child(3){ transition-delay:0.14s; }
@@ -105,10 +104,10 @@
   .hero p.lead{ font-size:18px; color:var(--text-muted); max-width:480px; margin-bottom:38px; }
   .hero-ctas{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:52px; }
   .hero-stats{ display:flex; gap:44px; }
-  .stat b{ font-family:var(--serif); font-size:30px; color:var(--gold); display:block; }
+  .stat b{ font-family:var(--serif); font-size:30px; color:var(--gold); display:block; animation:statPulse 3.2s ease-in-out infinite; }
+  @keyframes statPulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.7; } }
   .stat span{ font-size:13px; color:var(--text-muted); }
 
-  /* Герой — появление с задержкой и постоянное парение */
   .hero-anim{
     opacity:0;
     animation:heroFadeUp 1s cubic-bezier(.19,1,.22,1) forwards;
@@ -125,12 +124,6 @@
   }
   @keyframes heroFadeUp{ to{ opacity:1; transform:translateY(0); } }
   @keyframes heroScaleIn{ to{ opacity:1; transform:scale(1); } }
-
-  /* Постоянное парение для элементов героя */
-  .hero h1 em{ animation:floatEm 4s ease-in-out infinite; }
-  @keyframes floatEm{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
-  .stat b{ animation:statPulse 3.2s ease-in-out infinite; }
-  @keyframes statPulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.7; } }
 
   .chart-wrap{ position:relative; display:flex; align-items:center; justify-content:center; }
   .chart-wrap svg{ width:100%; max-width:460px; height:auto; }
@@ -152,7 +145,6 @@
   @keyframes fadein{ to{ opacity:1; } }
   @keyframes floatDot{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
 
-  /* Пульсирующие звёзды на фоне героя */
   .hero-stars{
     position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0;
   }
@@ -172,7 +164,7 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .hero-anim, .chart-dot, .hero h1 em, .stat b, .reveal, .hero-stars span{ animation:none !important; transition:none !important; opacity:1 !important; transform:none !important; }
+    .hero-anim, .chart-dot, .stat b, .reveal, .hero-stars span{ animation:none !important; transition:none !important; opacity:1 !important; transform:none !important; }
   }
 
   /* ===== ОСТАЛЬНЫЕ СТИЛИ ===== */
@@ -256,7 +248,7 @@
   .prog-dur{ font-size:13.5px; color:var(--text-muted); }
   .prog-price{ font-size:16px; text-align:right; font-weight:700; }
 
-  /* REVIEWS — без лайков */
+  /* REVIEWS */
   .reviews-carousel-wrap{ position:relative; }
   .reviews-track{
     display:flex; gap:22px; overflow-x:auto; scroll-snap-type:x mandatory;
@@ -283,17 +275,15 @@
     display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700;
     padding:4px 9px; border-radius:20px; flex-shrink:0; letter-spacing:.02em;
   }
-  .review-platform svg{ width:12px; height:12px; }
   .review-platform.tg{ background:rgba(52,80,255,.1); color:var(--cobalt); }
   .review-platform.wa{ background:rgba(124,148,115,.14); color:#5E7355; }
   .review-bubble{
     margin:0 22px 16px; padding:14px 16px; border-radius:4px 14px 14px 14px;
     background:var(--bg-alt); font-size:14px; line-height:1.55; color:var(--text);
   }
-  .review-foot{ padding:0 22px 20px; display:flex; justify-content:flex-start; }
+  .review-foot{ padding:0 22px 20px; }
   .review-time{ font-size:11.5px; color:var(--text-muted); }
 
-  /* Кнопка "Посмотреть оригинал" — теперь с иконкой скриншота */
   .review-original{
     display:flex; align-items:center; gap:8px; margin:0 22px 20px; padding-top:14px;
     border-top:1px solid var(--border); font-size:12.5px; font-weight:700; color:var(--cobalt);
@@ -304,7 +294,6 @@
   .review-original:hover{ color:var(--gold); gap:12px; }
   .review-original:hover svg{ transform:translateX(3px); }
 
-  /* LIGHTBOX для скриншотов */
   .lightbox{
     position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center;
     padding:24px; background:rgba(30,24,16,.6); backdrop-filter:blur(6px);
@@ -329,13 +318,13 @@
     width:100%; border-radius:10px; border:1px solid var(--border);
     max-height:70vh; object-fit:contain; background:var(--bg-alt);
   }
-  .lightbox-body .screenshot-placeholder{
+  .screenshot-placeholder{
     aspect-ratio:9/16; max-height:65vh; margin:0 auto; border-radius:12px; border:1.5px dashed var(--border);
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
     color:var(--text-muted); font-size:13px; text-align:center; padding:30px;
     background:linear-gradient(160deg, var(--bg-alt2), var(--bg-alt));
   }
-  .lightbox-body .screenshot-placeholder svg{ width:40px; height:40px; opacity:.4; }
+  .screenshot-placeholder svg{ width:40px; height:40px; opacity:.4; }
   .reviews-nav{ display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
   .reviews-nav button{
     width:46px; height:46px; border-radius:50%; border:1px solid var(--border);
@@ -451,4 +440,533 @@
       <p class="lead hero-anim">Соединяю астрологию, метафорические карты и таро с психологическим подходом — чтобы вы не просто услышали прогноз, а поняли себя и увидели путь.</p>
       <div class="hero-ctas hero-anim">
         <a href="#services" class="btn btn-primary">Выбрать консультацию</a>
-        <a href="#about" class="btn btn-ghost">О
+        <a href="#about" class="btn btn-ghost">Обо мне</a>
+      </div>
+      <div class="hero-stats hero-anim">
+        <div class="stat"><b>7+</b><span>лет практики</span></div>
+        <div class="stat"><b>900+</b><span>консультаций</span></div>
+      </div>
+    </div>
+    <div class="chart-wrap hero-anim">
+      <svg viewBox="0 0 400 400">
+        <circle class="chart-ring" cx="200" cy="200" r="170"/>
+        <circle class="chart-ring" cx="200" cy="200" r="120"/>
+        <circle class="chart-ring" cx="200" cy="200" r="4" stroke="none" fill="var(--gold)" opacity=".5"/>
+        <path class="chart-line" d="M200,30 L338,286 L62,286 Z"/>
+        <path class="chart-line gold" d="M200,80 L306,320 L94,320 Z" style="animation-delay:.3s"/>
+        <path class="chart-line" d="M200,30 L200,370 M62,286 L338,286" style="animation-delay:.6s"/>
+        <g>
+          <circle class="chart-dot" cx="200" cy="30" r="4" style="--fd:1s"/>
+          <circle class="chart-dot" cx="338" cy="286" r="4" style="--fd:1.2s"/>
+          <circle class="chart-dot" cx="62" cy="286" r="4" style="--fd:1.4s"/>
+          <circle class="chart-dot" cx="306" cy="320" r="3" style="--fd:1.6s"/>
+          <circle class="chart-dot" cx="94" cy="320" r="3" style="--fd:1.8s"/>
+        </g>
+        <text class="chart-label" x="200" y="20" text-anchor="middle">ASC</text>
+        <text class="chart-label" x="356" y="290" text-anchor="start">МАК</text>
+        <text class="chart-label" x="44" y="290" text-anchor="end">ТАРО</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="about-photo reveal reveal-left"><img src="images/anastasia.jpg" alt="Анастасия Зернова"></div>
+    <div class="about-text reveal reveal-right">
+      <div class="eyebrow">Обо мне</div>
+      <h2>Работаю на стыке<br>звёзд и психики</h2>
+      <p><strong>Я не гадаю — я помогаю увидеть структуру.</strong> Натальная карта показывает вашу конструкцию личности, хорарная астрология отвечает на конкретный вопрос здесь и сейчас, МАК вскрывает то, что спрятано от сознания, а таро даёт язык для разговора с настоящим моментом.</p>
+      <p>Работаю бережно и по делу: без запугивающих трактовок и воды. Каждая консультация — это конкретные выводы и рекомендации, которые можно применить уже сегодня.</p>
+      <ul class="why-list">
+        <li class="reveal reveal-up">Только онлайн-формат, вдумчиво и без спешки</li>
+        <li class="reveal reveal-up">Структура вместо расплывчатых предсказаний</li>
+        <li class="reveal reveal-up">Психологическая база — работаю с причиной, не симптомом</li>
+        <li class="reveal reveal-up">На связи между встречами, сопровождаю процесс</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background:var(--bg-alt); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="wrap">
+    <div class="reveal reveal-up">
+      <div class="eyebrow">Услуги</div>
+      <h2>Консультации и разборы</h2>
+      <p class="section-sub">Выберите формат, который сейчас откликается больше всего. Если сомневаетесь — напишите мне, подскажу.</p>
+    </div>
+    <div class="services-grid">
+      <div class="card reveal reveal-up">
+        <div class="tag">Натальная карта</div>
+        <h3>Полный разбор личности</h3>
+        <p>Таланты, темперамент, сильные и слабые стороны, отношения с деньгами, кармические задачи и родовые сценарии. Письменный файл + разбор ваших вопросов.</p>
+        <div class="price-row">
+          <div class="price">14 000 ₽</div>
+          <a href="#contact" class="btn btn-primary">Записаться</a>
+        </div>
+      </div>
+      <div class="card reveal reveal-up">
+        <div class="tag">МАК</div>
+        <h3>Сессия с метафорическими картами</h3>
+        <p>Работа с конкретным запросом через ассоциативные карты — быстро находим то, что мешает увидеть логика. Формат: онлайн-встреча 60 минут.</p>
+        <div class="price-row">
+          <div class="price">6 500 ₽</div>
+          <a href="#contact" class="btn btn-primary">Записаться</a>
+        </div>
+      </div>
+      <div class="card reveal reveal-up">
+        <div class="tag">Хорарная астрология</div>
+        <h3>Ответ на конкретный вопрос</h3>
+        <p>Строю карту на момент вопроса: «стоит ли», «когда», «чем закончится». Точный ответ по узкой теме, когда нужно решение здесь и сейчас — без общего прогноза.</p>
+        <div class="price-row">
+          <div class="price">5 000 ₽</div>
+          <a href="#contact" class="btn btn-primary">Записаться</a>
+        </div>
+      </div>
+      <div class="card reveal reveal-up">
+        <div class="tag">Таро</div>
+        <h3>Расклад на вопрос</h3>
+        <p>Отношения, решения, финансовая ситуация, предназначение. Развёрнутый расклад с аудио-разбором и ответами на уточняющие вопросы.</p>
+        <div class="price-row">
+          <div class="price">4 500 ₽</div>
+          <a href="#contact" class="btn btn-primary">Записаться</a>
+        </div>
+      </div>
+      <div class="card reveal reveal-up">
+        <div class="tag">Прогноз</div>
+        <h3>Соляр — разбор года</h3>
+        <p>Прогноз от дня рождения до дня рождения: ключевые сферы, риски и возможности года, эмоциональный фон. Бонус — ритуал встречи соляра.</p>
+        <div class="price-row">
+          <div class="price">9 000 ₽</div>
+          <a href="#contact" class="btn btn-primary">Записаться</a>
+        </div>
+      </div>
+      <div class="card reveal reveal-up">
+        <div class="tag">Пара</div>
+        <h3>Синастрия для двоих</h3>
+        <p>Совместимость, точки притяжения и конфликта, рекомендации для отношений. Разбор двух карт и общей динамики пары.</p>
+        <div class="price-row">
+          <div class="price">12 000 ₽</div>
+          <a href="#contact" class="btn btn-primary">Записаться</a>
+        </div>
+      </div>
+      <div class="card reveal reveal-up">
+        <div class="tag">Гайд</div>
+        <h3>«Путь к себе»: самостоятельный разбор</h3>
+        <p>Пособие с обучающим видео — разбираете свою натальную карту сами, шаг за шагом, в своём темпе.</p>
+        <div class="price-row">
+          <div class="price">2 900 ₽</div>
+          <a href="#contact" class="btn btn-primary">Купить</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section id="programs">
+  <div class="wrap">
+    <div class="reveal reveal-up">
+      <div class="eyebrow">Программы</div>
+      <h2>Курсы и интенсивы</h2>
+      <p class="section-sub">Обучаю с нуля и прокачиваю практикующих специалистов — в астрологии, работе с МАК и таро.</p>
+    </div>
+    <div class="programs-list">
+      <div class="prog-row reveal reveal-right">
+        <div class="prog-num">01</div>
+        <div class="prog-title">Астрология с нуля<small>Основы профессионального консультирования</small></div>
+        <div class="prog-dur">4 месяца</div>
+        <div class="prog-price">32 000 ₽</div>
+      </div>
+      <div class="prog-row reveal reveal-left">
+        <div class="prog-num">02</div>
+        <div class="prog-title">МАК в консультировании<small>Метафорические карты для работы с клиентами</small></div>
+        <div class="prog-dur">6 недель</div>
+        <div class="prog-price">18 000 ₽</div>
+      </div>
+      <div class="prog-row reveal reveal-right">
+        <div class="prog-num">03</div>
+        <div class="prog-title">Таро: от базы до практики<small>Символика, расклады, этика консультирования</small></div>
+        <div class="prog-dur">2 месяца</div>
+        <div class="prog-price">14 000 ₽</div>
+      </div>
+      <div class="prog-row reveal reveal-left">
+        <div class="prog-num">04</div>
+        <div class="prog-title">Интенсив «Карма и Род»<small>Родовые сценарии и работа с ними</small></div>
+        <div class="prog-dur">2 дня</div>
+        <div class="prog-price">7 000 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" style="background:var(--bg-alt); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="wrap">
+    <div class="reveal reveal-up">
+      <div class="eyebrow">Отзывы</div>
+      <h2>Что говорят клиенты</h2>
+      <p class="section-sub">Реальные слова людей, с которыми я работала — с их согласия.</p>
+    </div>
+    <div class="reviews-carousel-wrap">
+      <div class="reviews-track" id="reviewsTrack">
+        <div class="review-card reveal reveal-scale">
+          <div class="review-head">
+            <div class="review-avatar">М</div>
+            <div class="review-headtext">
+              <div class="review-name">Мария</div>
+              <div class="review-role">Разбор натальной карты</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">После разбора карты наконец поняла, почему определённые сферы жизни давались тяжело. Всё разложено чётко, без воды, с конкретными рекомендациями.</div>
+          <div class="review-foot">
+            <span class="review-time">вчера, 21:14</span>
+          </div>
+          <button type="button" class="review-original" data-name="Мария" data-role="Разбор натальной карты" data-platform="tg" data-img="images/reviews/maria.jpg">Посмотреть скриншот отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal reveal-scale">
+          <div class="review-head">
+            <div class="review-avatar">О</div>
+            <div class="review-headtext">
+              <div class="review-name">Ольга</div>
+              <div class="review-role">Сессия с МАК</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Сессия с МАК вскрыла то, что я месяцами не могла сформулировать словами. За час дошли до сути гораздо быстрее, чем с обычным разговором.</div>
+          <div class="review-foot">
+            <span class="review-time">вчера, 18:47</span>
+          </div>
+          <button type="button" class="review-original" data-name="Ольга" data-role="Сессия с МАК" data-platform="wa" data-img="images/reviews/olga.jpg">Посмотреть скриншот отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal reveal-scale">
+          <div class="review-head">
+            <div class="review-avatar">В</div>
+            <div class="review-headtext">
+              <div class="review-name">Виктория</div>
+              <div class="review-role">Курс «Таро: от базы до практики»</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Прошла курс по таро с нуля — очень структурно, без эзотерического тумана. Теперь уверенно консультирую сама.</div>
+          <div class="review-foot">
+            <span class="review-time">2 дня назад</span>
+          </div>
+          <button type="button" class="review-original" data-name="Виктория" data-role="Курс «Таро: от базы до практики»" data-platform="tg" data-img="images/reviews/victoria.jpg">Посмотреть скриншот отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal reveal-scale">
+          <div class="review-head">
+            <div class="review-avatar">Д</div>
+            <div class="review-headtext">
+              <div class="review-name">Дмитрий</div>
+              <div class="review-role">Хорарная астрология</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Хорарный вопрос закрыл ситуацию, которая тянулась месяцами. Точный ответ без размытых формулировок — именно то, что было нужно.</div>
+          <div class="review-foot">
+            <span class="review-time">3 дня назад</span>
+          </div>
+          <button type="button" class="review-original" data-name="Дмитрий" data-role="Хорарная астрология" data-platform="wa" data-img="images/reviews/dmitry.jpg">Посмотреть скриншот отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal reveal-scale">
+          <div class="review-head">
+            <div class="review-avatar">А</div>
+            <div class="review-headtext">
+              <div class="review-name">Алина</div>
+              <div class="review-role">Расклад на вопрос</div>
+            </div>
+            <div class="review-platform tg">Telegram</div>
+          </div>
+          <div class="review-bubble">Расклад таро помог посмотреть на отношения со стороны и перестать додумывать за партнёра. После разговора стало гораздо легче.</div>
+          <div class="review-foot">
+            <span class="review-time">3 дня назад</span>
+          </div>
+          <button type="button" class="review-original" data-name="Алина" data-role="Расклад на вопрос" data-platform="tg" data-img="images/reviews/alina.jpg">Посмотреть скриншот отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+        <div class="review-card reveal reveal-scale">
+          <div class="review-head">
+            <div class="review-avatar">Е</div>
+            <div class="review-headtext">
+              <div class="review-name">Екатерина</div>
+              <div class="review-role">Соляр — разбор года</div>
+            </div>
+            <div class="review-platform wa">WhatsApp</div>
+          </div>
+          <div class="review-bubble">Разбор соляра совпал с реальными событиями года почти дословно. Теперь готовлюсь к следующему году заранее и без тревоги.</div>
+          <div class="review-foot">
+            <span class="review-time">4 дня назад</span>
+          </div>
+          <button type="button" class="review-original" data-name="Екатерина" data-role="Соляр — разбор года" data-platform="wa" data-img="images/reviews/ekaterina.jpg">Посмотреть скриншот отзыва<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+      <div class="reviews-nav">
+        <button type="button" id="reviewsPrev" aria-label="Предыдущий отзыв">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button type="button" id="reviewsNext" aria-label="Следующий отзыв">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="reveal reveal-up">
+      <div class="eyebrow">FAQ</div>
+      <h2>Часто задаваемые вопросы</h2>
+      <p class="section-sub">Ответы на самые частые вопросы перед консультацией.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          Как проходит консультация?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Онлайн-встреча в Zoom, Telegram или WhatsApp. Мы заранее договариваемся о времени, вы присылаете данные (дату рождения, вопрос). На встрече я делю экран, показываю карту или расклад и последовательно разбираю ваш запрос. В конце — конкретные выводы и рекомендации. После встречи остаюсь на связи для уточняющих вопросов.</div>
+      </div>
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          Нужна ли точная дата рождения?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Для натальной карты и соляра нужны <strong>точные: день, месяц, год, время и город рождения</strong>. Если время неизвестно — я делаю ректификацию (восстановление времени по событиям) или использую полуденную карту (но точность снижается). Для хорарной астрологии и МАК дата рождения не нужна — только ваш вопрос.</div>
+      </div>
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          Как оплатить консультацию?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Принимаю оплату на карту Сбербанка, по номеру телефона (СБП), а также через Telegram/WhatsApp-платежи. Реквизиты отправляю в личном сообщении после записи. <strong>Предоплата 100%</strong> фиксирует ваше место и время.</div>
+      </div>
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          Сколько длится консультация?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Стандартная встреча — <strong>60 минут</strong>. Этого достаточно для разбора одного ключевого запроса (натальная карта, МАК, таро). Если вопросов много — можно продлить до 90 или 120 минут (стоимость увеличивается пропорционально).</div>
+      </div>
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          Какой результат я получу?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">На выходе вы получаете:<br>
+          <strong>— Ясность</strong> — вы понимаете структуру своей ситуации или личности.<br>
+          <strong>— Конкретные рекомендации</strong> — что делать, куда двигаться, на что обратить внимание.<br>
+          <strong>— Письменный файл</strong> (для натальной карты и соляра) с ключевыми выводами.<br>
+          <strong>— Запись встречи</strong> (по желанию), чтобы переслушать и ничего не упустить.</div>
+      </div>
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          Что такое ректификация времени рождения и зачем она нужна?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Ректификация — это восстановление точного времени рождения по событиям жизни. Если вы не знаете своё время рождения (или оно приблизительное), я могу уточнить его, анализируя важные даты вашей жизни. Это важно, потому что <strong>время рождения меняет положение домов в карте</strong> — и, соответственно, трактовку многих сфер жизни (карьера, отношения, финансы). Без точного времени некоторые прогнозы будут неполными.</div>
+      </div>
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          Можно ли задать вопрос, если я совсем не разбираюсь в астрологии?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Да, и даже нужно! Я объясняю всё <strong>простым языком, без специальных терминов</strong>. Вы приходите со своим вопросом, а я перевожу «звёздный язык» на понятные решения. Главное — ваш запрос, а не ваши знания астрологии.</div>
+      </div>
+      <div class="faq-item reveal reveal-up">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          А что, если я не увижу результата?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">Я даю <strong>гарантию</strong>: если после консультации вы не найдёте ответа на свой вопрос — я верну деньги. Пока ни один клиент не воспользовался этой гарантией, но она есть, чтобы вы чувствовали себя спокойно и уверенно.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap contact-grid">
+    <div class="contact-info reveal reveal-left">
+      <div class="eyebrow">Контакты</div>
+      <h2>Давайте познакомимся</h2>
+      <p>Напишите мне удобным способом или оставьте заявку — отвечу в течение дня и подскажу, какой формат подойдёт именно вам.</p>
+      <div class="contact-links">
+        <a href="https://t.me/your_telegram" target="_blank" rel="noopener">Telegram — @your_telegram</a>
+        <a href="https://t.me/symbolon_anastasiia" target="_blank" rel="noopener">Telegram-канал — t.me/symbolon_anastasiia</a>
+        <a href="https://wa.me/79163198159" target="_blank" rel="noopener">WhatsApp — +7 916 319-81-59</a>
+        <a href="mailto:i@weked.ru">i@weked.ru</a>
+      </div>
+    </div>
+    <div>
+      <form id="contactForm" class="reveal reveal-right">
+        <div class="field">
+          <label for="name">Имя</label>
+          <input id="name" name="name" type="text" required placeholder="Как к вам обращаться">
+        </div>
+        <div class="field">
+          <label for="contact">Telegram, WhatsApp или email</label>
+          <input id="contact" name="contact" type="text" required placeholder="Куда написать вам ответ">
+        </div>
+        <div class="field">
+          <label for="message">Сообщение</label>
+          <textarea id="message" name="message" placeholder="Кратко опишите запрос — так проще подобрать формат"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить заявку</button>
+        <p class="form-note">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности.</p>
+      </form>
+      <div class="thanks" id="thanks">Спасибо! Заявка получена — отвечу в ближайшее время.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="logo">Анастасия <span>Зернова</span></div>
+      <div class="foot-links">
+        <a href="#about">Обо мне</a>
+        <a href="#services">Услуги</a>
+        <a href="#programs">Программы</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Контакты</a>
+        <a href="#">Политика конфиденциальности</a>
+      </div>
+    </div>
+    <div class="foot-copy">© 2026 Анастасия Зернова. Все права защищены.</div>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="reviewLightbox">
+  <div class="lightbox-card">
+    <div class="lightbox-head">
+      <div class="review-avatar" id="lightboxAvatar">А</div>
+      <div class="review-headtext">
+        <div class="review-name" id="lightboxName">Имя</div>
+        <div class="review-role" id="lightboxRole">Услуга</div>
+      </div>
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="lightbox-body" id="lightboxBody">
+      <div class="screenshot-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span id="lightboxPlatformText">Скриншот из переписки</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Burger menu
+  const burger = document.getElementById('burger');
+  const navlinks = document.querySelector('.navlinks');
+  burger.addEventListener('click', () => {
+    const isOpen = navlinks.style.display === 'flex';
+    navlinks.style.display = isOpen ? 'none' : 'flex';
+    navlinks.style.cssText += isOpen ? '' : 'position:absolute; top:100%; left:0; right:0; flex-direction:column; background:rgba(250,245,235,.98); padding:24px 32px; gap:18px; border-bottom:1px solid var(--border); z-index:100;';
+  });
+
+  // Закрытие меню при клике на ссылку
+  document.querySelectorAll('.navlinks a').forEach(link => {
+    link.addEventListener('click', () => {
+      navlinks.style.display = 'none';
+    });
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => revealObserver.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-visible'));
+  }
+
+  // Reviews carousel navigation
+  const reviewsTrack = document.getElementById('reviewsTrack');
+  const reviewsPrev = document.getElementById('reviewsPrev');
+  const reviewsNext = document.getElementById('reviewsNext');
+  if (reviewsTrack && reviewsPrev && reviewsNext) {
+    const scrollAmount = () => (reviewsTrack.querySelector('.review-card')?.offsetWidth || 320) + 22;
+    reviewsPrev.addEventListener('click', () => {
+      reviewsTrack.scrollBy({ left: -scrollAmount(), behavior: 'smooth' });
+    });
+    reviewsNext.addEventListener('click', () => {
+      reviewsTrack.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
+    });
+  }
+
+  // Lightbox for review screenshots
+  const lightbox = document.getElementById('reviewLightbox');
+  const lightboxBody = document.getElementById('lightboxBody');
+  const lightboxAvatar = document.getElementById('lightboxAvatar');
+  const lightboxName = document.getElementById('lightboxName');
+  const lightboxRole = document.getElementById('lightboxRole');
+  const lightboxPlatformText = document.getElementById('lightboxPlatformText');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  function openLightbox(btn) {
+    const name = btn.dataset.name || '';
+    const role = btn.dataset.role || '';
+    const platform = btn.dataset.platform === 'wa' ? 'WhatsApp' : 'Telegram';
+    const imgSrc = btn.dataset.img || '';
+
+    lightboxName.textContent = name;
+    lightboxRole.textContent = role;
+    lightboxAvatar.textContent = name.trim().charAt(0).toUpperCase();
+
+    if (imgSrc) {
+      lightboxBody.innerHTML = `<img src="${imgSrc}" alt="Скриншот отзыва ${name}" loading="lazy">`;
+    } else {
+      lightboxBody.innerHTML = `
+        <div class="screenshot-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Скриншот из ${platform} появится здесь</span>
+        </div>
+      `;
+    }
+
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.review-original').forEach(btn => {
+    btn.addEventListener('click', () => openLightbox(btn));
+  });
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+  // Contact form
+  const form = document.getElementById('contactForm');
+  const thanks = document.getElementById('thanks');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    form.style.display = 'none';
+    thanks.classList.add('show');
+  });
+</script>
+
+</body>
+</html>
