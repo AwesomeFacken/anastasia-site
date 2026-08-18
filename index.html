@@ -102,24 +102,16 @@
   @keyframes statPulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.7; } }
   .stat span{ font-size:13px; color:var(--text-muted); }
 
-  .hero-anim{
-    opacity:0;
-    animation:heroFadeUp 1s cubic-bezier(.19,1,.22,1) forwards;
-  }
-  .hero .eyebrow.hero-anim{ animation-delay:.05s; }
-  .hero h1.hero-anim{ animation-delay:.18s; }
-  .hero p.lead.hero-anim{ animation-delay:.34s; }
-  .hero-ctas.hero-anim{ animation-delay:.48s; }
-  .hero-stats.hero-anim{ animation-delay:.6s; }
-  .chart-wrap.hero-anim{
-    opacity:0;
-    animation:heroScaleIn 1.1s cubic-bezier(.19,1,.22,1) forwards;
-    animation-delay:.3s;
-  }
-  @keyframes heroFadeUp{ to{ opacity:1; transform:translateY(0); } }
-  @keyframes heroScaleIn{ to{ opacity:1; transform:scale(1); } }
+  .hero-anim{ opacity:0; }
+  .chart-wrap.hero-anim{ opacity:0; }
 
   .chart-wrap{ position:relative; display:flex; align-items:center; justify-content:center; }
+  .chart-wrap::before{
+    content:""; position:absolute; inset:-15%; border-radius:50%; z-index:-1;
+    background:conic-gradient(from 0deg, transparent 0%, rgba(139,122,163,.16) 18%, transparent 36%, rgba(183,127,78,.14) 55%, transparent 72%);
+    animation:rotateGlow 22s linear infinite;
+  }
+  @keyframes rotateGlow{ to{ transform:rotate(360deg); } }
   .chart-wrap svg{ width:100%; max-width:460px; height:auto; }
   .chart-ring{ fill:none; stroke:var(--border); }
   .chart-line{
@@ -160,6 +152,9 @@
   @media (prefers-reduced-motion: reduce){
     .hero-anim, .chart-dot, .stat b, .reveal, .hero-stars span{ animation:none !important; transition:none !important; opacity:1 !important; transform:none !important; }
   }
+  /* Fallback if GSAP CDN fails to load — reveal everything immediately */
+  html.no-gsap .hero-anim,
+  html.no-gsap .reveal{ opacity:1 !important; transform:none !important; animation:none !important; }
 
   /* ===== ОСТАЛЬНЫЕ СТИЛИ ===== */
   .btn{
@@ -744,6 +739,14 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  // Safety net: if GSAP failed to load (offline / CDN blocked), reveal everything via CSS fallback
+  if (typeof gsap === 'undefined') {
+    document.documentElement.classList.add('no-gsap');
+  }
+</script>
 <script>
   // Burger menu
   const burger = document.getElementById('burger');
@@ -761,20 +764,125 @@
     });
   });
 
-  // Scroll reveal
-  const revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          revealObserver.unobserve(entry.target);
-        }
+  const hasGSAP = typeof gsap !== 'undefined';
+  if (hasGSAP && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+  }
+
+  // ===== HERO: entrance timeline + continuous ambient motion =====
+  function countUp(el, target, delay){
+    const obj = { val: 0 };
+    gsap.to(obj, {
+      val: target, duration: 1.4, delay: delay, ease: 'power2.out',
+      onUpdate: () => { el.textContent = Math.round(obj.val) + '+'; }
+    });
+  }
+
+  if (hasGSAP) {
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    heroTl
+      .fromTo('.hero .eyebrow.hero-anim', { opacity:0, y:24 }, { opacity:1, y:0, duration:.7 }, .05)
+      .fromTo('.hero h1.hero-anim', { opacity:0, y:30 }, { opacity:1, y:0, duration:.85 }, .15)
+      .fromTo('.hero p.lead.hero-anim', { opacity:0, y:26 }, { opacity:1, y:0, duration:.8 }, .32)
+      .fromTo('.hero-ctas.hero-anim', { opacity:0, y:22 }, { opacity:1, y:0, duration:.7 }, .46)
+      .fromTo('.hero-stats.hero-anim', { opacity:0, y:20 }, { opacity:1, y:0, duration:.7 }, .58)
+      .fromTo('.chart-wrap.hero-anim', { opacity:0, scale:.9 }, { opacity:1, scale:1, duration:1.1, ease:'power4.out' }, .28);
+
+    // Count up hero numbers once their container is visible
+    const statEls = document.querySelectorAll('.hero-stats b');
+    statEls.forEach(el => {
+      const target = parseInt(el.textContent, 10) || 0;
+      countUp(el, target, .75);
+    });
+
+    // Continuous breathing pulse on the central gold point
+    gsap.to('.chart-wrap circle[fill="var(--gold)"]', {
+      scale: 1.35, transformOrigin: '200px 200px', opacity: .8,
+      duration: 2.2, repeat: -1, yoyo: true, ease: 'sine.inOut'
+    });
+
+    // Mouse-parallax tilt on the hero chart — subtle, continuous while hovering
+    const heroEl = document.querySelector('.hero');
+    const chartWrap = document.querySelector('.chart-wrap');
+    if (heroEl && chartWrap && window.matchMedia('(min-width: 901px)').matches) {
+      const quickX = gsap.quickTo(chartWrap, 'rotationY', { duration:.6, ease:'power3.out' });
+      const quickY = gsap.quickTo(chartWrap, 'rotationX', { duration:.6, ease:'power3.out' });
+      gsap.set(chartWrap, { transformPerspective: 700, transformOrigin: 'center' });
+      heroEl.addEventListener('mousemove', (e) => {
+        const r = heroEl.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - .5;
+        const py = (e.clientY - r.top) / r.height - .5;
+        quickX(px * 10);
+        quickY(-py * 10);
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealEls.forEach(el => revealObserver.observe(el));
+      heroEl.addEventListener('mouseleave', () => { quickX(0); quickY(0); });
+    }
+  }
+
+  // ===== SCROLL REVEAL (GSAP ScrollTrigger, with CSS-fallback if GSAP unavailable) =====
+  if (hasGSAP) {
+    const batchGroups = [
+      { sel: '.services-grid', from: { y: 46 } },
+      { sel: '.reviews-track', from: { scale: .84 } },
+      { sel: '.faq-list', from: { y: 36 } },
+      { sel: '.why-list', from: { y: 26 } },
+    ];
+    const batchedEls = new Set();
+
+    batchGroups.forEach(group => {
+      const container = document.querySelector(group.sel);
+      if (!container) return;
+      const items = Array.from(container.querySelectorAll(':scope > .reveal'));
+      if (!items.length) return;
+      items.forEach(el => batchedEls.add(el));
+      gsap.set(items, Object.assign({ opacity: 0 }, group.from));
+      ScrollTrigger.batch(items, {
+        start: 'top 88%',
+        once: true,
+        onEnter: batch => gsap.to(batch, {
+          opacity: 1, y: 0, x: 0, scale: 1, duration: .9, ease: 'power3.out', stagger: .12
+        })
+      });
+    });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (batchedEls.has(el)) return;
+      let fromVars = { opacity: 0, y: 46 };
+      if (el.classList.contains('reveal-left')) fromVars = { opacity: 0, x: -60 };
+      else if (el.classList.contains('reveal-right')) fromVars = { opacity: 0, x: 60 };
+      else if (el.classList.contains('reveal-scale')) fromVars = { opacity: 0, scale: .86 };
+      gsap.fromTo(el, fromVars, {
+        opacity: 1, x: 0, y: 0, scale: 1, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+      });
+    });
+
+    // Section headings — clip-path reveal for extra flair as they scroll in
+    document.querySelectorAll('section h2').forEach(h2 => {
+      gsap.fromTo(h2,
+        { clipPath: 'inset(0 100% 0 0)', opacity: .3 },
+        {
+          clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: 1.1, ease: 'power4.inOut',
+          scrollTrigger: { trigger: h2, start: 'top 90%', once: true }
+        }
+      );
+    });
   } else {
-    revealEls.forEach(el => el.classList.add('is-visible'));
+    // No-GSAP fallback: plain IntersectionObserver toggle using original CSS transitions
+    const revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(el => revealObserver.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.add('is-visible'));
+    }
   }
 
   // Reviews carousel navigation
@@ -789,6 +897,46 @@
     reviewsNext.addEventListener('click', () => {
       reviewsTrack.scrollBy({ left: scrollAmount(), behavior: 'smooth' });
     });
+  }
+
+  // ===== Reviews carousel — "focus" animation while scrolling horizontally =====
+  // Cards near the center of the visible track are full-scale/opacity;
+  // cards toward the edges ease down slightly, creating movement as you scroll/drag.
+  if (reviewsTrack) {
+    const cards = Array.from(reviewsTrack.querySelectorAll('.review-card'));
+    let ticking = false;
+
+    function updateCardFocus(){
+      const trackRect = reviewsTrack.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+      cards.forEach(card => {
+        const r = card.getBoundingClientRect();
+        const cardCenter = r.left + r.width / 2;
+        const dist = Math.abs(trackCenter - cardCenter);
+        const norm = Math.min(dist / (trackRect.width / 2 + r.width / 2), 1);
+        const scale = 1 - norm * 0.08;
+        const opacity = 1 - norm * 0.35;
+        if (hasGSAP) {
+          gsap.to(card, { scale: scale, opacity: opacity, duration: .35, ease: 'power2.out', overwrite: 'auto' });
+        } else {
+          card.style.transform = `scale(${scale})`;
+          card.style.opacity = opacity;
+        }
+      });
+      ticking = false;
+    }
+
+    reviewsTrack.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateCardFocus);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('resize', updateCardFocus);
+    // Run once fonts/layout settle
+    setTimeout(updateCardFocus, 400);
+    window.addEventListener('load', updateCardFocus);
   }
 
   // Contact form
